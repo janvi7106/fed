@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CALCULATOR</title>
+ 
+</head>
+<body>
+
+<script >
+    document.addEventListener('DOMContentLoaded', function() {
+  const styles = `
+body{
+      font-family: Garamond, Serif;
+      background-color: cornsilk;
+      margin: 0;
+      padding: 0;
+  }
+  
+  .container {
+      max-width: 280px;
+      margin: 100px auto;
+      background-color: #000000;
+      padding: 20px;
+      border-radius: 30px;
+      border: 3px solid #312930;
+  }
+  
+  #textbox {
+      width: 85%;
+      height: 90px;
+      padding: 21px;
+      font-size: 25px;
+      margin-bottom: 10px;
+      border-radius: 25px;
+  }
+  
+  button {
+    padding: 16px;
+    font-size: 25px;
+    border: 3px solid #312930;
+    outline: none;
+    cursor: pointer;
+    background-color: cornsilk;
+    color: #3d333c;
+    border-radius: 25px;
+    margin: 5px;
+    width: 60px; 
+    height: 60px; 
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+  button:hover {
+      background-color: #FFD700;
+  }
+  
+  button:active {
+      background-color: #F6E6CC;
+  }
+  
+  `;
+  
+  const styleElement = document.createElement('style');
+  styleElement.textContent = styles;
+  document.head.appendChild(styleElement);
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  const h1 = document.createElement('h1');
+  const divContainer = document.createElement('div');
+  const divInput = document.createElement('div');
+  const inputTextbox = document.createElement('input');
+  const divButtons = document.createElement('div');
+  const divCenter = document.createElement('div'); 
+
+  inputTextbox.setAttribute('type', 'text');
+  inputTextbox.setAttribute('id', 'textbox');
+  divContainer.classList.add('container');
+  divInput.appendChild(inputTextbox);
+  divInput.appendChild(inputTextbox);
+
+  divCenter.style.textAlign = 'center';
+  divCenter.style.marginBottom = '0';
+  divCenter.innerHTML = '<h1>Calculator\</h1>';
+  divContainer.style.marginTop = '40px';
+
+  const buttonValues = ['C','%','D','/','7', '8', '9','*', '4', '5', '6','-', '1', '2', '3','+', '0','.','√','='];
+  buttonValues.forEach(value => {
+      const button = document.createElement('button');
+      button.classList.add('buttons');
+      button.textContent = value;
+      button.onclick = function() {
+          if (value === 'C') {
+              ClearScreen();
+          } else if (value === '=') {
+              equal();
+          } else if (value === 'D') {
+              deleteLast();
+          } else {
+              appendToScreen(value);
+          }
+      };
+      divButtons.appendChild(button);
+  });
+
+  document.body.appendChild(divCenter);
+  document.body.appendChild(h1);
+  divContainer.appendChild(divInput);
+  divContainer.appendChild(divButtons);
+  document.body.appendChild(divContainer);
+});
+
+function percent() {
+  const currentValue = parseFloat(document.getElementById('textbox').value);
+  const percentValue = currentValue / 100;
+  document.getElementById('textbox').value = percentValue;
+}
+
+function calculateSquareRoot() {
+  const inputValue = parseFloat(document.getElementById('textbox').value);
+
+  if (!isNaN(inputValue) && inputValue >= 0) {
+      const squareRoot = Math.sqrt(inputValue);
+      document.getElementById('textbox').value = squareRoot;
+  } else {
+      alert('Invalid input for square root calculation.');
+      ClearScreen();
+  }
+}
+
+function appendToScreen(value) {
+  document.getElementById('textbox').value += value;
+}
+
+function ClearScreen() {
+  document.getElementById('textbox').value = '';
+}
+
+function deleteLast() {
+  const currentText = document.getElementById('textbox').value;
+  document.getElementById('textbox').value = currentText.slice(0, -1);
+}
+
+function equal() {
+  try {
+      const result = eval(document.getElementById('textbox').value);
+      if (!isFinite(result) || isNaN(result)) {
+          throw new Error('Invalid Calculation');
+      }
+      document.getElementById('textbox').value = result;
+  } catch (error) {
+      console.error(error.name); 
+      alert(error.name); 
+      ClearScreen();
+  }
+}
+
+document.addEventListener('keydown', function(event) {
+  const key = event.key;
+  if (key === 'Enter') {
+      event.preventDefault();-
+      equal();
+  } else if (key === 'c') {
+      ClearScreen();
+  } else if (key === 'Delete') {
+      deleteLast();
+  } else if (key === 'Backspace') {
+      deleteLast();
+  } else if (key === 's') {
+      calculateSquareRoot() 
+  } else if (key === 'p') {
+      percent();
+  } else if (!isNaN(key) || key === '.' || ['+', '-', '*', '/'].includes(key)) {
+      appendToScreen(key);
+  }
+});
+
+</script>
+</body>
+</html>
